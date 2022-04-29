@@ -1,14 +1,2 @@
 /target/
 
-##Mac
-**/.DS_Store
-
-##Maven
-**/target
-**/build
-**/out
-
-## STS/Eclipse IDE
-**/.setttings
-**/.classpath
-**/.project
