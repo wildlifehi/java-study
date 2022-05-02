@@ -27,7 +27,5 @@ public class Rect {
 		Rect other = (Rect) obj;
 		return height == other.height && width == other.width;
 	}
-
-	
 	
 }
