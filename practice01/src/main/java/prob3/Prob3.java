@@ -8,8 +8,6 @@ public class Prob3 {
 
 		Scanner scanner = new Scanner(System.in);
 
-		/* 코드 작성 */
-		
 		scanner.close();
 	}
 }
