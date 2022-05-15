@@ -68,7 +68,6 @@ public class ChatWindow {
 			buttonSend.setBackground(Color.GRAY);
 			buttonSend.setForeground(Color.WHITE);
 			buttonSend.addActionListener(new ActionListener() {
-
 				public void actionPerformed(ActionEvent actionEvent) {
 					sendMessage();
 				}
@@ -166,7 +165,7 @@ public class ChatWindow {
 	
 	/**
 	 * 
-	 * @author hwimin-kim
+	 * @author jongil-Park
 	 * Receive Thread from Chat Server
 	 *
 	 */

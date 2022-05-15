@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ChatServer {
 	private static final String IP= "192.168.10.4";
-	private static final int PORT = 8888;
+	private static final int PORT = 6666;
 	private static List<Writer> listWriters;
 	private static List<User> listUsers;
 	
