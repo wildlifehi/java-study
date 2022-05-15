@@ -1,17 +1,16 @@
 package chapter04;
 
 public class MyClass {
-
-	private static MyClass instance = null ;
+	private static MyClass instance = null;
 	
-	
-	private MyClass() {		
+	private MyClass() {
 	}
 
 	public static MyClass getInstance() {
 		if(instance == null) {
 			instance = new MyClass();
 		}
-		return null;
+		
+		return instance;
 	}
 }

@@ -24,6 +24,7 @@ public class KeyboardTest {
 			
 			
 			String line = null;
+			
 			while((line=br.readLine()) != null) {
 				if("quit".equals(line)) {
 					break;
@@ -31,24 +32,19 @@ public class KeyboardTest {
 				System.out.println(line);
 			}
 			
-		} catch (UnsupportedEncodingException e) {
+		} catch (IOException e) {
 			System.out.println("error: " + e);
 		}finally {
 			try {
-				if(br != null) {
-				try {
-					br.close();
-				
-		}catch( IOException e) {
-			System.out.println("error: " + e);
+					if(br != null) {
+						br.close();
+					}
+				}catch( IOException e) {
+					System.out.println("error: " + e);
+				}
 		}
-		}
-
-	}
 	}
 }
-
-
 	
 
 

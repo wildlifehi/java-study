@@ -11,7 +11,7 @@ public class StaticMethod {
 	void f2() {
 		System.out.println(StaticMethod.m);
 		// 같은 클래스에서는 클래스(static) 변수 접근에서는 클래스 이름이 생략이 가능하다.
-		System.out.println(m)
+		System.out.println(m);
 	}
 	
 	void f3() {
@@ -21,9 +21,6 @@ public class StaticMethod {
 	void f4() {
 		// 같은 클래스에서는 클래스(static) 변수 접근에서는 클래스 이름이 생략이 가능하다.
 		s1();
-	}
-	
-	static void s1() {
 	}
 	
 	static void s1() {

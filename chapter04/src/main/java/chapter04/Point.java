@@ -13,5 +13,13 @@ public class Point {
 	public String toString() {
 		return "Point [x=" + x + ", y=" + y + "]";
 	}
+
+	public static void main (String[] args) {
+
+		Point p = new Point(4,6);
+
+		System.out.println(p.toString());
+	}
+	
 }
 

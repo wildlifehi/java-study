@@ -13,7 +13,7 @@ public class SwapTest03 {
 		System.out.println(a.val + ":" + b.val);
 	}
 
-	public static swap(Value p, Value q) {
+	public static void swap(Value p, Value q) {
 		//아까전에는 값을 그대로 넘긴것이고, 지금은 객체의 레퍼런스를 넘긴 것이다.
 		
 		/* swap */
