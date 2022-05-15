@@ -24,14 +24,12 @@ import java.net.SocketException;
 import java.awt.List;
 
 public class ChatWindow {
-
 	private Frame frame;
 	private Panel pannel;
 	private Panel pannel2;
 	private Button buttonSend;
 	private TextField textField;
 	private TextArea textArea;
-	// private String name;
 	private Socket socket;
 	private PrintWriter pw;
 	private BufferedReader br;
@@ -44,7 +42,6 @@ public class ChatWindow {
 		buttonSend = new Button("Send");
 		textField = new TextField();
 		textArea = new TextArea(30, 80);
-		// this.name = name;
 		this.socket = socket;
 		userList = new List(4);
 	}
@@ -65,7 +62,7 @@ public class ChatWindow {
 			 * 1. UI 초기화
 			 */
 			// Button
-			buttonSend.setBackground(Color.GRAY);
+			buttonSend.setBackground(new Color(112, 112, 112));
 			buttonSend.setForeground(Color.WHITE);
 			buttonSend.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent actionEvent) {
@@ -84,40 +81,32 @@ public class ChatWindow {
 					}
 				}
 			});
-			// List
-			
-			//userAdd(pw);
-					
-			
+				
 			// Pannel
-			pannel.setBackground(Color.LIGHT_GRAY);
+			pannel.setBackground(new Color(207, 207, 207));
 			pannel.add(textField);
 			pannel.add(buttonSend);
 			frame.add(BorderLayout.SOUTH, pannel);
 			
 			// Pannel2
-			pannel2.setBackground(Color.LIGHT_GRAY);
+			pannel2.setBackground(new Color(158, 158, 158));
 			pannel2.add(userList);
 			frame.add(BorderLayout.EAST, pannel2);
 	
 			// TextArea
 			textArea.setEditable(false);
+			textArea.setBackground(new Color(158, 158, 158));
 			frame.add(BorderLayout.CENTER, textArea);
-						
+
 			// Frame
 			frame.addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
 					finish();
 				}
 			});
+			
 			frame.setVisible(true);
 			frame.pack();
-			
-			/**
-			 * 2. IOStream (Pipeline established)
-			 */
-		
-			
 			
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
@@ -139,10 +128,12 @@ public class ChatWindow {
 	}
 	
 	private void sendMessage() {
-		String message = textField.getText();
-		textField.setText("");
-		textField.requestFocus();	
-		pw.println("MESSAGE:" + message);	
+		if(!textField.getText().isEmpty()) {
+			String message = textField.getText();
+			textField.setText("");
+			textField.requestFocus();
+			pw.println("MESSAGE:" + message);	
+		}
 	}
 	
 	private void updateTextArea(String message) {
@@ -151,7 +142,6 @@ public class ChatWindow {
 	}
 	
 	private void finish() {
-		System.out.println("소켓 닫기 or 방나가기(QUIT) 프로토콜 구현");
 		pw.println("QUIT:");
 		try {
 			if(socket != null && !socket.isClosed())
@@ -165,32 +155,26 @@ public class ChatWindow {
 	
 	/**
 	 * 
-	 * @author jongil-Park
+	 * @author hwimin-kim
 	 * Receive Thread from Chat Server
 	 *
 	 */
 	private class ChatClientThread extends Thread {	
-		
-		
+			
 		@Override
 		public void run() {
 			try {					
 				while(true) {
 					String request = br.readLine();
-					//System.out.println("전달받은 데이터" + request);
-					
 					if(request  == null) {	
 						ChatClientApp.log("closed by client");
 						break;
 					}else if("USERS".equals(request.split(":")[0])){
-						System.out.println("유저리스트 업데이트 전달 받은 데이터: "+request);
 						int count = request.split(":").length;
 						for(int i = 1; i<count  ;i++) {
 							userAdd(request.split(":")[i]);
 						}
 					}else if("DELETE".equals(request.split(":")[0])){
-						System.out.println("유저리스트 삭제 토큰 전달 받음");
-						System.out.println("유저 총 숫자"+userList.getItemCount());
 						for(int i = userList.getItemCount() -1; i >=0 ; i--) {
 							userRemove(i);
 						}

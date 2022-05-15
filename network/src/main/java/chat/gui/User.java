@@ -2,19 +2,22 @@ package chat.gui;
 
 public class User {
 	private String name;
-	private static boolean master;
+	private String grade;
 	
 	public User(String name) {
 		this.name = name;
-		if(!master)
-			master = true;
+		this.grade = "[N]";
 	}
 	
-	public static boolean getMaster() {
-		return master;
-	}
 	public  String getName() {
 		return name;
 	}
 	
+	public String getGrade() {
+		return this.grade;
+	}
+	
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
 }

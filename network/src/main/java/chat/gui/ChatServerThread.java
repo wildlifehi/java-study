@@ -18,6 +18,7 @@ public class ChatServerThread extends Thread {
 	private List<User> listUsers;
 	private BufferedReader br;
 	private PrintWriter pw;
+	private User user;
 	
 	public ChatServerThread(Socket socket, List<Writer> listWriters, List<User> listUsers) {
 		this.socket = socket;
@@ -54,10 +55,9 @@ public class ChatServerThread extends Thread {
 				String[] tokens = request.split(":");
 				if("JOIN".equals(tokens[0])) {
 					doJoin(tokens[1], pw);
-				}
-				else if("MESSAGE".equals(tokens[0]))
+				} else if("MESSAGE".equals(tokens[0])) {
 					doMessage(tokens[1]);
-				else if("QUIT".equals(tokens[0])) {
+				} else if("QUIT".equals(tokens[0])) {
 					doQuit(pw);
 					break;
 				}
@@ -89,20 +89,15 @@ public class ChatServerThread extends Thread {
 		//ack
 		pw.println("JOIN:OK");
 		
-		// 사용자 추가에 대한 유저 리스트 선행 삭제
+		// 사용자 추가전 유저 리스트 선행 삭제
 		doUserListDelete();
 		
 		/*writer pool & User pool에 저장*/
 		addWriter(writer);
-		addUser(new User(nickname));
+		addUser();
 		
 		// 사용자 추가에 대한 유저 리스트 업데이트
 		doUserListUpdate();
-		
-		
-		
-		
-		
 	}
 
 	private void broadcast(String data) {
@@ -121,7 +116,9 @@ public class ChatServerThread extends Thread {
 		}
 	}
 	
-	private void addUser(User user) {
+	private void addUser() {
+		user = new User(nickname);
+		
 		synchronized(listUsers) {
 			listUsers.add(user);
 		}
@@ -137,30 +134,30 @@ public class ChatServerThread extends Thread {
 		}
 	}
 	
-//	private void doUserAdd(String name) {
-//		synchronized(listWriters) {
-//			for(int i=0; i < listWriters.size(); i++) {
-//				if(!name.equals(listUsers.get(i).getName()))
-//					pw.println("USER:" + name);
-//			for(Writer writer : listWriters) {
-//				PrintWriter printWriter = (PrintWriter)writer;
-//				printWriter.println(nickname + ":"+ data);
-//				printWriter.flush();
-//			}
-//		}
-//	}
-	
 	private void doUserListUpdate() {
-		System.out.println("유저리스트 업데이트 토큰 보냄");
 		synchronized(listWriters) {
 			String data = "USERS:";	
-			for(int i=0; i< listUsers.size() ;i++) {
-				if(i != listUsers.size()-1)
-					data += listUsers.get(i).getName() + ":";
-				else
-					data += listUsers.get(i).getName();
-			}
+			/*
+			 * for(int i=0; i< listUsers.size(); i++) { if(i != listUsers.size()-1) data +=
+			 * listUsers.get(i).getName() + ":"; else data += listUsers.get(i).getName(); }
+			 */
 			
+			for(int i=0; i< listUsers.size(); i++) {
+				if(listUsers.size() == 1) {
+					listUsers.get(i).setGrade("[M]");
+					data += listUsers.get(i).getName() + listUsers.get(i).getGrade();
+				} else {
+					if(i != listUsers.size()-1)
+						if(i == 0) {
+							listUsers.get(i).setGrade("[M]");
+							data += listUsers.get(i).getName() + listUsers.get(i).getGrade() + ":";
+						} else
+							data += listUsers.get(i).getName() + ":";
+					else
+						data += listUsers.get(i).getName();
+				}
+			}
+				
 			for(Writer writer : listWriters) {
 				PrintWriter printWriter = (PrintWriter)writer;
 				printWriter.println(data);
@@ -171,7 +168,6 @@ public class ChatServerThread extends Thread {
 	}
 	
 	private void doUserListDelete() {
-		System.out.println("유저리스트 삭제 토큰 보냄");
 		synchronized(listWriters) {
 			String data = "DELETE:";
 			for(Writer writer : listWriters) {
@@ -184,15 +180,23 @@ public class ChatServerThread extends Thread {
 	
 	
 	private void doQuit(Writer writer) {
+		doUserListDelete();
 		removeWriter(writer);
-		
+		removeUser();
 		String data = nickname + "님이 퇴장 하였습니다.";
 		broadcast(data);
+		doUserListUpdate();
 	}
 
 	private void removeWriter(Writer writer) {
 		synchronized(listWriters) {
 			listWriters.remove(writer);
+		}
+	}
+	
+	private void removeUser() {
+		synchronized(listUsers) {
+			listUsers.remove(user);
 		}
 	}
 }
